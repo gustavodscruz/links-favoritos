@@ -1,19 +1,33 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
 </head>
+
 <body>
     <h1>Bem vindo, {{nome}}!</h1>
 
     <h2>Categorias!</h2>
     {{#categorias}}
-        <div>
-            <h2>Nome da categoria: {{name}}</h2>
-        </div>
-        <br><br>
+    <div>
+        <h2>Nome da categoria: {{name}}</h2>
+    </div>
+    <br><br>
     {{/categorias}}
+
+    <a href="/add-category">Adicionar Categoria</a>
+    <br><br>
+    <a href="/add-link">Adicionar Link</a>
+    <br><br>
+    <a href="/links">Ver Links</a>
+    <br><br>
+    <form action="/logout" method="post">
+        <input type="hidden" name="{{_csrf.parameterName}}" value="{{_csrf.token}}">
+        <button type="submit">Sair</button>
+    </form>
 </body>
+
 </html>

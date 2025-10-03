@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
 
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,8 @@ import com.example.links.entity.CustomUser;
 import com.example.links.service.CategoriaService;
 import com.example.links.service.UserService;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 @Controller
 @RequiredArgsConstructor
 @Log4j2
@@ -26,16 +29,21 @@ public class DashboardController {
     private final CategoriaService categoriaService;
 
     @GetMapping("/dashboard")
-    public ModelAndView getDashboard() {
+    public ModelAndView getDashboard(HttpServletRequest request) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        ModelAndView mv = new ModelAndView("dashboard");
+        ModelAndView modelAndView = new ModelAndView("dashboard");
         CustomUser user = userService.loadUserByUsername(auth.getName());
+        CsrfToken csrf = (CsrfToken) request.getAttribute("_csrf");
 
-        mv.addObject("nome", user.getName());
+        if (csrf != null) {
+            modelAndView.addObject("_csrf", csrf);
+        }
+
+        modelAndView.addObject("nome", user.getName());
         List<Categoria> categorias = categoriaService.findAllByUserId();
         log.debug("Categorias", categorias);
-        mv.addObject("categorias", categoriaService.findAllByUserId());
-        return mv;
+        modelAndView.addObject("categorias", categoriaService.findAllByUserId());
+        return modelAndView;
     }
 
 }

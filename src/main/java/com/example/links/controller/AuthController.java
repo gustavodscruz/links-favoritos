@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor
-public class LoginController {
+public class AuthController {
 
     @GetMapping("/login")
     public ModelAndView login(
