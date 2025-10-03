@@ -1,20 +1,28 @@
 <!doctype html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Adicionar categoria</title>
 </head>
+
 <body>
 
-{{#success}}
-    <h2>Categoria cadastrada com sucesso!</h2>
-{{/success}}
+    {{#success}}
+        <h2>Categoria cadastrada com sucesso!</h2>
+    {{/success}}
 
-<form action="/categoria/add" method="post">
-    <label for="name">Nome da categoria:</label><br>
-    <input type="text" name="name" id="name" placeholder="Nome da categoria">
-    <button type="submit">Enviar</button>
-</form>
+    <form action="/categoria/add" method="post">
+        <!-- CSRF token (Spring) -->
+        <input type="hidden" name="{{_csrf.parameterName}}" value="{{_csrf.token}}">
+        
+        <label for="name">Nome da categoria:</label><br>
+        <input type="text" name="name" id="name" placeholder="Nome da categoria">
+        <button type="submit">Enviar</button>
+    </form>
+
+    <a href="/dashboard">Voltar para o painel</a>
 </body>
+
 </html>

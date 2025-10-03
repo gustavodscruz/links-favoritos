@@ -28,7 +28,7 @@ public class DashboardController {
     private final UserService userService;
     private final CategoriaService categoriaService;
 
-    @GetMapping("/dashboard")
+    @GetMapping({"/dashboard", "", "/"})
     public ModelAndView getDashboard(HttpServletRequest request) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         ModelAndView modelAndView = new ModelAndView("dashboard");
