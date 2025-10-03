@@ -1,0 +1,12 @@
+-- NOTE: Flyway migrations must run inside the target database. Creating or switching
+-- databases with statements like CREATE DATABASE or USE are non-transactional and
+-- can cause Flyway to fail with "mixed transactional and non-transactional statements".
+--
+-- Please create the `linksdb` database manually in your SQL Server instance before
+-- starting the application. Example (run once in your SQL Server):
+--
+--   CREATE DATABASE linksdb;
+--
+-- After creating the database, Flyway will apply the migrations present in
+-- src/main/resources/db/migration against that database.
+

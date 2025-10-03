@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/login.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <title>Login</title>
+
+</head>
+
+<body>
+    <div class="container py-5">
+        <div class="d-flex align-items-center justify-content-center">
+            <div class="card login-card p-4">
+                <div class="brand-top">
+                    <h1>Links Favoritos</h1>
+                    <p>Entre na sua conta</p>
+                </div>
+                <div class="form-section">
+                    {{#error}}
+                    <div class="alert alert-danger" role="alert">
+                        {{#errorMessage}}{{errorMessage}}{{/errorMessage}}
+                        {{^errorMessage}}Usuário ou senha inválidos{{/errorMessage}}
+                    </div>
+
+                    {{/error}}
+
+                    {{#logout}}
+                    <div class="alert alert-success" role="alert">Você saiu com sucesso.</div>
+                    {{/logout}}
+
+                    <form action="/login" method="post">
+                        <!-- CSRF token (Spring) -->
+                        <input type="hidden" name="{{_csrf.parameterName}}" value="{{_csrf.token}}">
+
+                        <div class="mb-3">
+                            <label for="email" class="form-label">E-mail</label>
+                            <input type="text" class="form-control" id="email" name="email"
+                                placeholder="seu.email@exemplo.com" required autofocus>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Senha</label>
+                            <input type="password" class="form-control" id="password" name="password"
+                                placeholder="••••••••" required>
+                        </div>
+
+                        <div class="d-flex justify-content-center align-items-center mb-3">
+                            <a class="muted-link small-note" href="#">Esqueceu a senha?</a>
+                        </div>
+
+                        <div class="d-grid mb-3">
+                            <button type="submit" class="btn btn-primary btn-lg">Entrar</button>
+                        </div>
+
+                        <div class="text-center small-note">Ainda não tem conta? <a href="#">Crie uma</a></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+    <script>
+    // foco no campo usuário ao carregar (id: email)
+    try { document.getElementById('email').focus(); } catch (e) { }
+    </script>
+</body>
+
+</html>

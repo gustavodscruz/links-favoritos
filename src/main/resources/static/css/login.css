@@ -1,0 +1,54 @@
+.login-card {
+    max-width: 420px;
+    width: 100%;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(13, 17, 30, 0.12);
+    overflow: hidden;
+    padding: 20px !important;
+}
+
+.brand-top {
+    background: linear-gradient(90deg, rgba(109, 28, 166, 1) 0%, rgba(109, 40, 217, 1) 100%);
+    color: #fff;
+    padding: 28px 24px;
+    text-align: center;
+}
+
+.brand-top h1 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    letter-spacing: -0.2px;
+}
+
+.brand-top p {
+    margin: 6px 0 0;
+    opacity: 0.92;
+    font-size: 0.875rem;
+}
+
+.form-section {
+    padding: 28px 24px;
+    background: #fff;
+}
+
+.form-control:focus {
+    box-shadow: 0 0 0 0.2rem rgba(var(--bs-primary-rgb), 0.18);
+    border-color: var(--bs-primary);
+}
+
+.btn-primary {
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
+}
+
+.muted-link {
+    color: #6b7280;
+    text-decoration: none;
+}
+
+.small-note {
+    font-size: 0.85rem;
+    color: #6b7280;
+}
