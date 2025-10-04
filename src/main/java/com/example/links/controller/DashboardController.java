@@ -42,7 +42,7 @@ public class DashboardController {
         modelAndView.addObject("nome", user.getName());
         List<Categoria> categorias = categoriaService.findAllByUserId();
         log.debug("Categorias", categorias);
-        modelAndView.addObject("categorias", categoriaService.findAllByUserId());
+        modelAndView.addObject("categorias", categorias);
         return modelAndView;
     }
 

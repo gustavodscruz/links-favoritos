@@ -12,3 +12,47 @@
      background: linear-gradient(135deg, rgba(109, 40, 217, 0.12), rgba(99, 102, 241, 0.08));
      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
  }
+
+/* Categoria page styles */
+.page-container {
+    max-width: 1000px;
+    margin: 40px auto;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 8px 30px rgba(13, 17, 30, 0.06);
+    padding: 24px;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+}
+
+.category-table th {
+    background: linear-gradient(90deg, rgba(var(--bs-primary-rgb),0.08), rgba(99,102,241,0.04));
+}
+
+.btn-edit {
+    color: #fff;
+    background-color: #10b981; /* verde */
+    border: none;
+}
+
+.btn-delete {
+    color: #fff;
+    background-color: #ef4444; /* vermelho */
+    border: none;
+}
+
+.form-card {
+    background: #f8f9fb;
+    padding: 18px;
+    border-radius: 8px;
+}
+
+.small-note {
+    font-size: 0.85rem;
+    color: #6b7280;
+}

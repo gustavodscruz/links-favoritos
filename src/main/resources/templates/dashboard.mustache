@@ -4,29 +4,173 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <title>Dashboard - Links Favoritos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <style>
+        :root {
+            --bs-primary: #6d28d9;
+            --bs-primary-rgb: 109, 40, 217;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, rgba(109, 40, 217, 0.08), rgba(99, 102, 241, 0.05));
+            font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+        }
+
+        .navbar {
+            background: #fff !important;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        }
+
+        .navbar-brand {
+            color: var(--bs-primary) !important;
+            font-weight: 600;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, rgba(109,28,166,0.95), rgba(109,40,217,0.92));
+            padding: 32px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(109, 40, 217, 0.25);
+        }
+
+        .hero h4 {
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .hero .small-note {
+            color: rgba(255,255,255,0.9);
+        }
+
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        }
+
+        .card-title {
+            color: var(--bs-primary);
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .categoria-item {
+            padding: 12px 0;
+            border-bottom: 1px solid #f1f1f1;
+        }
+
+        .categoria-item:last-child {
+            border-bottom: none;
+        }
+
+        .btn-primary {
+            background-color: var(--bs-primary);
+            border-color: var(--bs-primary);
+        }
+
+        .btn-primary:hover {
+            background-color: #5b21b6;
+            border-color: #5b21b6;
+        }
+
+        .btn-outline-primary {
+            color: var(--bs-primary);
+            border-color: var(--bs-primary);
+        }
+
+        .btn-outline-primary:hover {
+            background-color: var(--bs-primary);
+            border-color: var(--bs-primary);
+        }
+
+        .small-note {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+    </style>
 </head>
 
 <body>
-    <h1>Bem vindo, {{nome}}!</h1>
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand" href="/dashboard">🔗 Links Favoritos</a>
+            <div class="d-flex align-items-center">
+                <span class="me-3 small-note">Olá, <strong>{{nome}}</strong></span>
+                <form action="/logout" method="post" class="m-0">
+                    <input type="hidden" name="{{_csrf.parameterName}}" value="{{_csrf.token}}">
+                    <button class="btn btn-sm btn-outline-primary" type="submit">Sair</button>
+                </form>
+            </div>
+        </div>
+    </nav>
 
-    <h2>Categorias!</h2>
-    {{#categorias}}
-    <div>
-        <p>Nome da categoria: {{name}}</p>
+    <div class="container mt-4 mb-5">
+        <div class="hero">
+            <div class="row align-items-center">
+                <div class="col-md-7">
+                    <h4 class="mb-1">Bem-vindo de volta! 👋</h4>
+                    <p class="small-note mb-0">Gerencie seus links e categorias em um só lugar.</p>
+                </div>
+                <div class="col-md-5 text-md-end mt-3 mt-md-0">
+                    <a href="/categoria/add" class="btn btn-light me-2">Gerenciar Categorias</a>
+                    <a href="/add-link" class="btn btn-outline-light">Novo Link</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">📂 Suas Categorias</h5>
+                        {{#categorias}}
+                        <div class="categoria-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <div class="fw-medium">{{name}}</div>
+                                <div class="small-note">ID: {{id}}</div>
+                            </div>
+                            <a href="/categoria/add" class="btn btn-sm btn-outline-primary">Gerenciar</a>
+                        </div>
+                        {{/categorias}}
+                        {{^categorias}}
+                        <div class="text-center text-muted py-4">
+                            <p class="mb-2">📭 Você ainda não tem categorias</p>
+                            <a href="/categoria/add" class="btn btn-primary">Criar primeira categoria</a>
+                        </div>
+                        {{/categorias}}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">⚡ Ações Rápidas</h5>
+                        <div class="d-grid gap-2">
+                            <a class="btn btn-primary" href="/categoria/add">
+                                <strong>+</strong> Nova Categoria
+                            </a>
+                            <a class="btn btn-outline-primary" href="/add-link">
+                                <strong>+</strong> Novo Link
+                            </a>
+                            <a class="btn btn-outline-secondary" href="/links">
+                                📋 Ver Todos os Links
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    {{/categorias}}
 
-    <a href="/categoria/add">Adicionar Categoria</a>
-    <br><br>
-    <a href="/add-link">Adicionar Link</a>
-    <br><br>
-    <a href="/links">Ver Links</a>
-    <br><br>
-    <form action="/logout" method="post">
-        <input type="hidden" name="{{_csrf.parameterName}}" value="{{_csrf.token}}">
-        <button type="submit">Sair</button>
-    </form>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
 </body>
 
 </html>
