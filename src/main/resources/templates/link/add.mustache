@@ -8,17 +8,12 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" href="/css/link-add.css">
+    <link rel="stylesheet" href="/css/dashboard.css">
+
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light">
-        <div class="container">
-            <a class="navbar-brand" href="/dashboard">🔗 Links Favoritos</a>
-            <div class="d-flex align-items-center">
-                <a class="btn btn-outline-primary" href="/">Voltar</a>
-            </div>
-        </div>
-    </nav>
+   {{> partials/header}}
 
     <div class="container mt-4 mb-5">
         <div class="card">
@@ -106,7 +101,7 @@
         </div>
 
         <!-- lista de links existentes (substituída por cards) -->
-        <div class="mt-4">
+        <!-- <div class="mt-4">
             <h5 class="mb-3">Seus links</h5>
             <div class="row g-4">
                 {{#links}}
@@ -141,7 +136,7 @@
                 </div>
                 {{/links}}
             </div>
-        </div>
+        </div> -->
 
     </div>
 

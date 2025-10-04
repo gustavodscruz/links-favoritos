@@ -24,7 +24,7 @@ public class LinkService {
 
     @Transactional(readOnly = true)
     @Cacheable(value = "links", key = "T(org.springframework.security.core.context.SecurityContextHolder).getContext().getAuthentication().getName()")
-    public List<Link> findAll() {
+    public List<Link> findAllByUser() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Long userId = ((CustomUser) principal).getId();
 

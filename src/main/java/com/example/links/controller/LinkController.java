@@ -1,5 +1,7 @@
 package com.example.links.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
@@ -31,6 +33,23 @@ public class LinkController {
     @Autowired
     private LinkService linkService;
 
+    @GetMapping("")
+    public ModelAndView getLinksPage(HttpServletRequest request) {
+        ModelAndView modelAndView = new ModelAndView("/link/index");
+
+        CsrfToken csrf = (CsrfToken) request.getAttribute("_csrf");
+
+        if (csrf != null) {
+            modelAndView.addObject("_csrf", csrf);
+        }
+
+        List<Link> links = linkService.findAllByUser();
+
+        modelAndView.addObject("links", links);
+
+        return modelAndView;
+    }
+
     @GetMapping("/add")
     public ModelAndView getLinkAddPage(HttpServletRequest request) {
         log.debug("GET /link/add called");
@@ -46,7 +65,7 @@ public class LinkController {
         }
 
         var categorias = categoriaService.findAllByUserId();
-        var links = linkService.findAll();
+        var links = linkService.findAllByUser();
 
         log.debug("Categorias size: {}", categorias == null ? 0 : categorias.size());
         log.debug("Links size: {}", links == null ? 0 : links.size());
