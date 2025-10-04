@@ -35,8 +35,8 @@
 
                     <form action="/login" method="post">
                         <!-- CSRF token (Spring) -->
-                        <input type="hidden" name="{{_csrf.parameterName}}" value="{{_csrf.token}}">
-
+                        {{> partials/csrf}}
+                        
                         <div class="mb-3">
                             <label for="email" class="form-label">E-mail</label>
                             <input type="text" class="form-control" id="email" name="email"

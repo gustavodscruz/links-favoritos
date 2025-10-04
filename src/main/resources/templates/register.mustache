@@ -28,36 +28,34 @@
                     <div class="alert alert-danger" role="alert">{{error}}</div>
                     {{/error}}
 
-                    {{#errors}}
-                    <div class="alert alert-danger" role="alert">
-                        <ul class="mb-0">
-                            {{#errors}}
-                            <li>{{defaultMessage}}</li>
-                            {{/errors}}
-                        </ul>
-                    </div>
-                    {{/errors}}
 
                     <form action="/register" method="post">
                         <!-- CSRF token (Spring) -->
-                        <input type="hidden" name="{{_csrf.parameterName}}" value="{{_csrf.token}}">
+                        
+                        {{> partials/csrf}}
 
                         <div class="mb-3">
                             <label for="name" class="form-label">Nome</label>
                             <input type="text" class="form-control" id="name" name="name"
                                 placeholder="Seu nome completo" required autofocus>
+                            {{#nameError}} <label for="name" class="text-danger mt-1">{{nameError}}</label> {{/nameError}}
                         </div>
 
                         <div class="mb-3">
                             <label for="email" class="form-label">E-mail</label>
                             <input type="email" class="form-control" id="email" name="email"
                                 placeholder="seu.email@exemplo.com" required>
+                            {{#emailError}} <label for="email" class="text-danger mt-1">{{emailError}}</label>
+                            {{/emailError}}
+
                         </div>
 
                         <div class="mb-3">
                             <label for="password" class="form-label">Senha</label>
                             <input type="password" class="form-control" id="password" name="password"
                                 placeholder="••••••••" required>
+                            {{#passwordError}} <label for="password" class="text-danger mt-1">{{passwordError}}</label>
+                            {{/passwordError}}
                         </div>
 
                         <div class="d-grid mb-3">
@@ -75,8 +73,8 @@
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
         crossorigin="anonymous"></script>
     <script>
-    // foco no campo nome ao carregar
-    try { document.getElementById('name').focus(); } catch (e) { }
+        // foco no campo nome ao carregar
+        try { document.getElementById('name').focus(); } catch (e) { }
     </script>
 </body>
 

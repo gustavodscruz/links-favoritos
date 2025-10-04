@@ -25,7 +25,8 @@
             <div class="card-body">
                 <h5 class="card-title">➕ Adicionar novo link</h5>
                 <form action="/links/add" method="post">
-                    <input type="hidden" name="{{_csrf.parameterName}}" value="{{_csrf.token}}">
+                    {{> partials/csrf}}
+
 
                     <div class="mb-3">
                         <label for="url" class="form-label">URL</label>

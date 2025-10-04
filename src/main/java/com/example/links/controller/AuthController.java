@@ -1,8 +1,12 @@
 package com.example.links.controller;
 
+import java.util.List;
+
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -61,12 +65,26 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ModelAndView registerUser(@Valid @ModelAttribute RegisterEmailAndPassword dto, BindingResult result, HttpServletRequest request) {
+    public ModelAndView registerUser(@Valid @ModelAttribute RegisterEmailAndPassword dto, BindingResult result,
+            HttpServletRequest request) {
 
         ModelAndView modelAndView = new ModelAndView("register");
 
+        CsrfToken csrf = (CsrfToken) request.getAttribute("_csrf");
+
+        if (csrf != null) {
+            modelAndView.addObject("_csrf", csrf);
+        }
+
         if (result.hasErrors()) {
-            modelAndView.addObject("errors", result.getAllErrors());
+            List<FieldError> objectErrors = result.getFieldErrors();
+            objectErrors.forEach(error -> {
+                modelAndView.addObject(
+                        error
+                                .getField()
+                                .concat("Error"),
+                        error.getDefaultMessage());
+            });
             return modelAndView;
         }
 
@@ -77,14 +95,8 @@ public class AuthController {
             return modelAndView;
         }
 
-         CsrfToken csrf = (CsrfToken) request.getAttribute("_csrf");
-
-        if (csrf != null) {
-            modelAndView.addObject("_csrf", csrf);
-        }
-
-
         modelAndView.addObject("success", "Usuário registrado com sucesso!");
+
         return modelAndView;
     }
 
