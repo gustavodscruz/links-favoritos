@@ -27,6 +27,8 @@ public class Link {
     
     private boolean favorited;
 
+    private String description;
+
     @Nullable
     private String thumbnailPreview;
 

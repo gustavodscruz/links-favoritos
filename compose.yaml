@@ -6,8 +6,21 @@ services:
       - 'MSSQL_PID=express'
       - 'MSSQL_SA_PASSWORD=verYs3cret'
     ports:
-      - '1433'
+      - '1433:1433'
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    networks:
+      - sqlserver_net
   mssql-tools:
     image: mcr.microsoft.com/mssql-tools:latest
     depends_on:
       - sqlserver
+    command: sleep infinity
+    networks:
+      - sqlserver_net
+
+volumes:
+  sqlserver_data:
+
+networks:
+  sqlserver_net:
