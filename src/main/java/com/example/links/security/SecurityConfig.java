@@ -22,7 +22,7 @@ public class SecurityConfig {
                 http
                                 .userDetailsService(userService)
                                 .authorizeHttpRequests(auth -> auth
-                                                .requestMatchers("/", "/home", "/public/**", "/css/**", "/js/**",
+                                                .requestMatchers("/", "/register", "/public/**", "/css/**", "/js/**",
                                                                 "/images/**")
                                                 .permitAll()
                                                 .anyRequest().authenticated())

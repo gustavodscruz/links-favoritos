@@ -8,8 +8,7 @@
         integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" href="/css/login.css">
     <link rel="stylesheet" href="/css/styles.css">
-    <title>Login</title>
-
+    <title>Registrar</title>
 </head>
 
 <body>
@@ -18,29 +17,41 @@
             <div class="card login-card p-4">
                 <div class="brand-top">
                     <h1>Links Favoritos</h1>
-                    <p>Entre na sua conta</p>
+                    <p>Crie sua conta</p>
                 </div>
                 <div class="form-section">
-                    {{#error}}
-                    <div class="alert alert-danger" role="alert">
-                        {{#errorMessage}}{{errorMessage}}{{/errorMessage}}
-                        {{^errorMessage}}Usuário ou senha inválidos{{/errorMessage}}
-                    </div>
+                    {{#success}}
+                    <div class="alert alert-success" role="alert">{{success}}</div>
+                    {{/success}}
 
+                    {{#error}}
+                    <div class="alert alert-danger" role="alert">{{error}}</div>
                     {{/error}}
 
-                    {{#logout}}
-                    <div class="alert alert-success" role="alert">Você saiu com sucesso.</div>
-                    {{/logout}}
+                    {{#errors}}
+                    <div class="alert alert-danger" role="alert">
+                        <ul class="mb-0">
+                            {{#errors}}
+                            <li>{{defaultMessage}}</li>
+                            {{/errors}}
+                        </ul>
+                    </div>
+                    {{/errors}}
 
-                    <form action="/login" method="post">
+                    <form action="/register" method="post">
                         <!-- CSRF token (Spring) -->
                         <input type="hidden" name="{{_csrf.parameterName}}" value="{{_csrf.token}}">
 
                         <div class="mb-3">
+                            <label for="name" class="form-label">Nome</label>
+                            <input type="text" class="form-control" id="name" name="name"
+                                placeholder="Seu nome completo" required autofocus>
+                        </div>
+
+                        <div class="mb-3">
                             <label for="email" class="form-label">E-mail</label>
-                            <input type="text" class="form-control" id="email" name="email"
-                                placeholder="seu.email@exemplo.com" required autofocus>
+                            <input type="email" class="form-control" id="email" name="email"
+                                placeholder="seu.email@exemplo.com" required>
                         </div>
 
                         <div class="mb-3">
@@ -49,15 +60,11 @@
                                 placeholder="••••••••" required>
                         </div>
 
-                        <div class="d-flex justify-content-center align-items-center mb-3">
-                            <a class="muted-link small-note" href="#">Esqueceu a senha?</a>
-                        </div>
-
                         <div class="d-grid mb-3">
-                            <button type="submit" class="btn btn-primary btn-lg">Entrar</button>
+                            <button type="submit" class="btn btn-primary btn-lg">Registrar</button>
                         </div>
 
-                        <div class="text-center small-note">Ainda não tem conta? <a href="/register">Crie uma</a></div>
+                        <div class="text-center small-note">Já tem uma conta? <a href="/login">Entre aqui</a></div>
                     </form>
                 </div>
             </div>
@@ -68,8 +75,8 @@
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
         crossorigin="anonymous"></script>
     <script>
-    // foco no campo usuário ao carregar (id: email)
-    try { document.getElementById('email').focus(); } catch (e) { }
+    // foco no campo nome ao carregar
+    try { document.getElementById('name').focus(); } catch (e) { }
     </script>
 </body>
 
