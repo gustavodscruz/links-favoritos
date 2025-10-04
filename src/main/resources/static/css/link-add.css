@@ -45,3 +45,23 @@ body {
     font-size: 0.875rem;
     color: #6b7280;
 }
+
+.category-checkbox-group .form-check {
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: background-color 0.2s;
+}
+
+.category-checkbox-group .form-check:hover {
+    background-color: rgba(109, 40, 217, 0.05);
+}
+
+.category-checkbox-group .form-check-input:checked {
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
+}
+
+.category-checkbox-group .form-check-label {
+    cursor: pointer;
+    user-select: none;
+}

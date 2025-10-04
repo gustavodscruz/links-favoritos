@@ -13,4 +13,7 @@ import com.example.links.entity.Categoria;
 public interface CategoriaRepository extends JpaRepository<Categoria, Long>{
     @Query(value = "select c from Categoria c where c.user.id = :user_id")
     List<Categoria> findAllByUserId(@Param("user_id") Long userId);
+
+    @Query(value = "select c from Categoria c where c.id in :ids")
+    List<Categoria> findAllByIds(@Param("ids") List<Long> ids);
 }

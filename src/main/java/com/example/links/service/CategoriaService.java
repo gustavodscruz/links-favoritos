@@ -31,6 +31,11 @@ public class CategoriaService {
         return categoriaRepository.save(categoria);
     }
 
+    public List<Categoria> findAllByIds(List<Long> ids) {
+        if (ids == null || ids.isEmpty()) return List.of();
+        return categoriaRepository.findAllByIds(ids);
+    }
+
     public boolean delete (Long id) {
         categoriaRepository.deleteById(id);
         return true;
