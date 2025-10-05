@@ -1,12 +1,11 @@
 package com.example.links.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.links.dto.LinkDto;
@@ -21,6 +20,8 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 @Controller
 @RequestMapping("/link")
@@ -32,23 +33,6 @@ public class LinkController {
 
     @Autowired
     private LinkService linkService;
-
-    @GetMapping("")
-    public ModelAndView getLinksPage(HttpServletRequest request) {
-        ModelAndView modelAndView = new ModelAndView("/link/index");
-
-        CsrfToken csrf = (CsrfToken) request.getAttribute("_csrf");
-
-        if (csrf != null) {
-            modelAndView.addObject("_csrf", csrf);
-        }
-
-        List<Link> links = linkService.findAllByUser();
-
-        modelAndView.addObject("links", links);
-
-        return modelAndView;
-    }
 
     @GetMapping("/add")
     public ModelAndView getLinkAddPage(HttpServletRequest request) {
@@ -73,22 +57,12 @@ public class LinkController {
         modelAndView.addObject("listagem-categorias", categorias);
         modelAndView.addObject("links", links);
 
-        if (!links.isEmpty()) {
-            log.debug("Categorias do terceiro link: {}", links.get(2).getName());
-        }
-
         return modelAndView;
     }
 
     @PostMapping("/add")
-    public ModelAndView saveLink(@Valid @ModelAttribute LinkDto dto, BindingResult result, HttpServletRequest request) {
+    public ModelAndView saveLink(@Valid @ModelAttribute LinkDto dto, BindingResult result) {
         ModelAndView modelAndView = new ModelAndView("redirect:/link/add");
-
-        CsrfToken csrfToken = (CsrfToken) request.getAttribute("_csrf");
-
-        if (csrfToken != null) {
-            modelAndView.addObject("_csrf", csrfToken);
-        }
 
         if (result.hasErrors()) {
             result.getFieldErrors().forEach(error -> {
@@ -108,5 +82,52 @@ public class LinkController {
 
         return modelAndView;
     }
+
+    @PostMapping("/delete")
+    public ModelAndView deleteLink(@RequestParam Long id) {
+        ModelAndView modelAndView = new ModelAndView("redirect:/link/");
+
+        boolean deleted = linkService.delete(id);
+
+        if (deleted) {
+            modelAndView.addObject("deletedSuccess", "Link deletado com sucesso!");
+        } else {
+            modelAndView.addObject("deletedError", "Link não pode ser deletado");
+        }
+
+        return modelAndView;
+    }
+
+    @GetMapping({ "", "/" })
+    public ModelAndView listLinks(HttpServletRequest request,
+            @RequestParam(value = "deletedSuccess", required = false) String deletedSuccess,
+            @RequestParam(value = "deletedError", required = false) String deletedError,
+            @RequestParam(value = "categoria", required = false) Long categoriaId
+            ) {
+
+        ModelAndView modelAndView = new ModelAndView("/link/index");
+        CsrfToken csrf = (CsrfToken) request.getAttribute("_csrf");
+
+        modelAndView.addObject("listagem-categorias", categoriaService.findAllByUserId());
+
+        if (csrf != null) {
+            modelAndView.addObject("_csrf", csrf);
+        }
+        if (deletedSuccess != null) {
+            modelAndView.addObject("deletedSuccess", deletedSuccess);
+        }
+        if (deletedError != null) {
+            modelAndView.addObject("deletedError", deletedError);
+        }
+
+        if (categoriaId != null) {
+            modelAndView.addObject("links", linkService.findAllByCategoria(categoriaId));
+            modelAndView.addObject("filteredBy", categoriaId);
+            return modelAndView;
+        }
+        modelAndView.addObject("links", linkService.findAllByUser());
+        return modelAndView;
+    }
+    
 
 }
