@@ -24,4 +24,5 @@ export GIF_API_KEY="sua-chave-aqui"
         SPRING_DATASOURCE_URL: ${{ secrets.SPRING_DATASOURCE_URL }}
         SPRING_DATASOURCE_USERNAME: ${{ secrets.SPRING_DATASOURCE_USERNAME }}
         SPRING_DATASOURCE_PASSWORD: ${{ secrets.SPRING_DATASOURCE_PASSWORD }}
+        GIF_API_KEY: ${{ secrets.GIF_API_KEY }}
 ```
