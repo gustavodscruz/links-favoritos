@@ -1,12 +1,14 @@
 package com.example.links.controller;
 
 import com.example.links.dto.CategoriaDto;
+import com.example.links.dto.CategoriaUpdateDto;
 import com.example.links.entity.Categoria;
 import com.example.links.entity.CustomUser;
 import com.example.links.service.CategoriaService;
 import com.example.links.service.UserService;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
@@ -16,7 +18,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,19 +34,18 @@ public class CategoriaController {
     @Autowired
     private CategoriaService categoriaService;
 
-    @Autowired
-    private UserService userService;
 
     @GetMapping({"/add", ""})
     public ModelAndView getAddCategoriaPage(
             @RequestParam(required = false) Boolean success,
             @RequestParam(required = false) Boolean deleteSuccess,
             @RequestParam(required = false) Boolean deleteError,
+            @RequestParam(value = "categoria", required = false) Long id,
             HttpServletRequest request) {
         ModelAndView modelAndView = new ModelAndView("categoria/add");
 
         if (Boolean.TRUE.equals(success)) {
-            modelAndView.addObject("success", true);
+            modelAndView.addObject("success", "Categoria cadastrada com sucesso!");
         }
 
         if (Boolean.TRUE.equals(deleteSuccess)) {
@@ -58,13 +61,15 @@ public class CategoriaController {
             modelAndView.addObject("_csrf", csrf);
         }
 
+        if (id != null){
+            modelAndView.addObject("categoria", categoriaService.findById(id));
+        }
+
         List<Categoria> categorias = categoriaService.findAllByUserId();
         modelAndView.addObject("categorias", categorias);
 
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        CustomUser user = userService.loadUserByUsername(auth.getName());
-        modelAndView.addObject("user", user); // expõe o objeto user completo para o template
-
+        CustomUser user = (CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        modelAndView.addObject("user", user);
         return modelAndView;
     }
 
@@ -92,5 +97,47 @@ public class CategoriaController {
 
         return new ModelAndView("redirect:/categoria/add?deleteSuccess=true");
     }
+
+    @GetMapping("/edit")
+    public ModelAndView getEditPage(@RequestParam(value = "categoria") Long id) {
+        return new ModelAndView("redirect:/categoria/add")
+            .addObject("categoria", id);
+    }
+
+    @PostMapping("/edit")
+    public ModelAndView editCategoria(@Valid @ModelAttribute CategoriaUpdateDto dto, BindingResult result, HttpServletRequest request) {
+        ModelAndView modelAndView = new ModelAndView("/categoria/add");
+        
+        CsrfToken csrf = (CsrfToken) request.getAttribute("_csrf");
+        if (csrf != null) {
+            modelAndView.addObject("_csrf", csrf);
+        }
+
+        List<Categoria> categorias = categoriaService.findAllByUserId();
+        modelAndView.addObject("categorias", categorias);
+
+        CustomUser user = (CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        modelAndView.addObject("user", user);
+
+        if (result.hasErrors()){
+            result.getFieldErrors().forEach(error -> {
+                modelAndView.addObject(error.getField().concat("Error"), error.getDefaultMessage());
+            });
+            return modelAndView;
+        }
+
+        Categoria categoria = categoriaService.update(dto);
+
+        if (categoria == null){
+            modelAndView.addObject("error", "Não foi possível editar a categoria");
+            return modelAndView;
+        }
+
+        modelAndView.addObject("success", "Categoria editada com sucesso");
+
+        return modelAndView;
+    }
+    
+    
 
 }

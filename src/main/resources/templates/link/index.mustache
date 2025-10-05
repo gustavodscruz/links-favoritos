@@ -15,6 +15,14 @@
 <body class="bg-light">
     {{> partials/header}}
 
+    {{#success}}
+    <div class="alert alert-success" role="alert">{{success}}</div>
+    {{/success}}
+
+    {{#error}}
+    <div class="alert alert-danger" role="alert">{{error}}</div>
+    {{/error}}
+
     {{#deletedSuccess}}
     <div class="alert alert-success alert-dismissible fade show" role="alert">
         {{deletedSuccess}}
@@ -29,48 +37,59 @@
     {{/deletedError}}
 
     <main class="container my-5">
-        <h5 class="mb-4">Seus links</h5>
-        <div class="d-flex justify-content-between mb-4 align-items-center">
-            <form action="/link/" method="get" class="d-flex align-items-center">
-                <label for="categoria" class="me-2 mb-0">Filtrar por Categoria:</label>
-                <select id="categoria" name="categoria" class="form-select me-3"
+        <!-- Section Header with Add Button -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Seus links</h5>
+                <!-- Link Add Button -->
+                <a href="/link/add" class="btn btn-light">➕ Adicionar Link</a>
+            </div>
+            <!-- Filter Form -->
+            <div class="card-body d-flex align-items-center">
+                <form action="/link/" method="get" class="d-flex align-items-center w-100">
+                    <label for="categoria" class="me-2 mb-0">Filtrar por Categoria:</label>
+                    <select id="categoria" name="categoria" class="form-select me-3"
                         onchange="if (this.value === '') { window.location.href = '/link'; } else { this.form.submit(); }">
-                    <option value="">Todas</option>
-                    {{#listagem-categorias}}
-                    <option value="{{id}}">{{name}}</option>
-                    {{/listagem-categorias}}
-                </select>
-                {{#filteredBy}}
-                <script>
-                    // mantém seleção após carregamento
-                    document.getElementById('categoria').value = '{{filteredBy}}';
-                </script>
-                {{/filteredBy}}
-            </form>
-            <a href="/link/add" class="btn btn-primary">➕ Adicionar Link</a>
+                        <option value="">Todas</option>
+                        {{#listagem-categorias}}
+                        <option value="{{id}}">{{name}}</option>
+                        {{/listagem-categorias}}
+                    </select>
+                    {{#filteredBy}}
+                    <script>
+                        // mantém seleção após carregamento
+                        document.getElementById('categoria').value = '{{filteredBy}}';
+                    </script>
+                    {{/filteredBy}}
+                </form>
+            </div>
         </div>
         <div class="row g-4">
             {{#links}}
             <div class="col-12 col-md-6 col-lg-4">
-                <div class="card h-100">
+                <div class="card border-0 shadow-sm h-100">
                     {{#thumbnailPreview}}
                     <img src="{{thumbnailPreview}}" class="card-img-top link-preview" alt="preview">
                     {{/thumbnailPreview}}
                     <div class="card-body d-flex flex-column">
                         <h6 class="card-title">{{#name}}{{name}}{{/name}}</h6>
-                        <p class="card-text text-truncate mb-2"><a href="{{url}}" target="_blank">{{url}}</a></p>
+                        <div class="mb-2">
+                            <a href="{{url}}" target="_blank"
+                               class="btn btn-sm btn-outline-primary w-100 text-start text-truncate">
+                                🔗 {{url}}
+                            </a>
+                        </div>
                         <div class="mb-2">
                             {{#categorias}}
                             <span class="badge bg-primary text-light me-1">{{name}}</span>
                             {{/categorias}}
                         </div>
                         <div class="mt-auto d-flex justify-content-between">
-                            <a href="/link/add?id={{id}}" class="btn btn-sm btn-outline-primary">✏️ Editar</a>
+                            <a href="/link/edit?link={{id}}" class="btn btn-sm btn-outline-primary">✏️ Editar</a>
                             <form action="/link/delete" method="post" class="m-0">
                                 <input type="hidden" name="id" value="{{id}}">
                                 {{> partials/csrf}}
-                                <button class="btn btn-sm btn-danger"
-                                    onclick="return confirm('Excluir link?')">🗑️</button>
+                                <button class="btn btn-sm btn-danger" onclick="return confirm('Excluir link?')">🗑️</button>
                             </form>
                         </div>
                     </div>

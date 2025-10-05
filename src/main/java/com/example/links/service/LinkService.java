@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.links.dto.LinkDto;
+import com.example.links.dto.LinkUpdateDto;
 import com.example.links.entity.Categoria;
 import com.example.links.entity.CustomUser;
 import com.example.links.entity.Link;
@@ -62,8 +63,8 @@ public class LinkService {
     }
 
     @Transactional
-    public Link update(LinkDto dto, Long id) {
-        Link link = findById(id);
+    public Link update(LinkUpdateDto dto) {
+        Link link = findById(dto.getId());
         link.setName(dto.getName());
         link.setUrl(dto.getUrl());
         link.setFavorited(dto.isFavorited());
@@ -78,9 +79,8 @@ public class LinkService {
     public boolean delete(Long id) {
         linkRepository.deleteById(id);
         wipeCache();
-        if (linkRepository.existsById(id))
-            return false;
-        return true;
+        return !linkRepository.existsById(id);
+
     }
 
     @CacheEvict(value = {

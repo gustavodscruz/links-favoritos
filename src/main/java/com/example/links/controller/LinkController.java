@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.links.dto.LinkDto;
+import com.example.links.dto.LinkUpdateDto;
 import com.example.links.entity.Link;
 import com.example.links.service.CategoriaService;
 import com.example.links.service.LinkService;
@@ -42,23 +43,65 @@ public class LinkController {
         CsrfToken csrf = (CsrfToken) request.getAttribute("_csrf");
         if (csrf != null) {
             modelAndView.addObject("_csrf", csrf);
-            log.debug("CSRF token found: parameterName={} tokenPresent={}", csrf.getParameterName(),
-                    csrf.getToken() != null);
-        } else {
-            log.debug("No CSRF token in request attributes");
         }
 
         var categorias = categoriaService.findAllByUserId();
-        var links = linkService.findAllByUser();
-
-        log.debug("Categorias size: {}", categorias == null ? 0 : categorias.size());
-        log.debug("Links size: {}", links == null ? 0 : links.size());
 
         modelAndView.addObject("listagem-categorias", categorias);
-        modelAndView.addObject("links", links);
 
         return modelAndView;
     }
+
+    @GetMapping("/edit")
+    public ModelAndView getLinkPage(@RequestParam(value = "link") Long id, HttpServletRequest request) {
+        ModelAndView modelAndView = new ModelAndView("/link/add");
+
+        Link link = linkService.findById(id);
+
+        CsrfToken csrf = (CsrfToken) request.getAttribute("_csrf");
+        if (csrf != null) {
+            modelAndView.addObject("_csrf", csrf);
+        }
+
+        var categorias = categoriaService.findAllByUserId();
+        modelAndView.addObject("listagem-categorias", categorias);
+
+        modelAndView.addObject("link", link);
+
+        return modelAndView;
+    }
+
+    @PostMapping("/edit")
+    public ModelAndView editLink(@Valid @ModelAttribute LinkUpdateDto dto, BindingResult result) {
+        ModelAndView modelAndView;
+        
+        
+        if (result.hasErrors()) {
+            modelAndView = new ModelAndView("redirect:/link/edit");
+            modelAndView.addObject("link", dto.getId());
+            result.getFieldErrors().forEach(error -> {
+                modelAndView.addObject(error.getField().concat("Error"), error.getDefaultMessage());
+            });
+            return modelAndView;
+        }
+
+        Link link = linkService.update(dto);
+
+        if (link == null) {
+            modelAndView = new ModelAndView("redirect:/link/edit");
+            modelAndView.addObject("link", dto.getId());
+            modelAndView.addObject("error", "Não foi possível editar o link");
+            return modelAndView;
+        }
+
+        modelAndView = new ModelAndView("redirect:/link/");
+
+        modelAndView.addObject("success", "Link editado com sucesso!");
+
+        return modelAndView;
+    }
+    
+    
 
     @PostMapping("/add")
     public ModelAndView saveLink(@Valid @ModelAttribute LinkDto dto, BindingResult result) {
@@ -90,9 +133,9 @@ public class LinkController {
         boolean deleted = linkService.delete(id);
 
         if (deleted) {
-            modelAndView.addObject("deletedSuccess", "Link deletado com sucesso!");
+            modelAndView.addObject("success", "Link deletado com sucesso!");
         } else {
-            modelAndView.addObject("deletedError", "Link não pode ser deletado");
+            modelAndView.addObject("error", "Link não pode ser deletado");
         }
 
         return modelAndView;
@@ -100,8 +143,8 @@ public class LinkController {
 
     @GetMapping({ "", "/" })
     public ModelAndView listLinks(HttpServletRequest request,
-            @RequestParam(value = "deletedSuccess", required = false) String deletedSuccess,
-            @RequestParam(value = "deletedError", required = false) String deletedError,
+            @RequestParam(required = false) String success,
+            @RequestParam(required = false) String error,
             @RequestParam(value = "categoria", required = false) Long categoriaId
             ) {
 
@@ -113,11 +156,11 @@ public class LinkController {
         if (csrf != null) {
             modelAndView.addObject("_csrf", csrf);
         }
-        if (deletedSuccess != null) {
-            modelAndView.addObject("deletedSuccess", deletedSuccess);
+        if (success != null) {
+            modelAndView.addObject("success", success);
         }
-        if (deletedError != null) {
-            modelAndView.addObject("deletedError", deletedError);
+        if (error != null) {
+            modelAndView.addObject("error", error);
         }
 
         if (categoriaId != null) {

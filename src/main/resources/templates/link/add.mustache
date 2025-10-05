@@ -28,13 +28,15 @@
                 <div class="alert alert-danger" role="alert">{{error}}</div>
                 {{/error}}
 
-                <form action="/link/add" method="post">
+                <form action="{{#link}}/link/edit{{/link}}{{^link}}/link/add{{/link}}" method="post">
                     {{> partials/csrf}}
+
+                    <input type="hidden" name="id" value="{{#link}}{{id}}{{/link}}">
 
                     <div class="mb-3">
                         <label for="name" class="form-label">Nome</label>
                         <input type="text" id="name" name="name" class="form-control"
-                            placeholder="Nome do link (opcional)">
+                            placeholder="Nome do link (opcional)" value="{{#link}}{{name}}{{/link}}">
                         {{#nameError}}
                         <div class="invalid-feedback d-block">{{nameError}}</div>
                         {{/nameError}}
@@ -43,7 +45,7 @@
                     <div class="mb-3">
                         <label for="url" class="form-label">URL</label>
                         <input type="url" id="url" name="url" class="form-control" placeholder="https://exemplo.com"
-                            required>
+                            required value="{{#link}}{{url}}{{/link}}">
                         {{#urlError}}
                         <div class="invalid-feedback d-block">{{urlError}}</div>
                         {{/urlError}}
@@ -52,7 +54,7 @@
                     <div class="mb-3">
                         <label for="description" class="form-label">Descrição</label>
                         <textarea id="description" name="description" class="form-control" rows="3"
-                            placeholder="Descrição do link (opcional)"></textarea>
+                            placeholder="Descrição do link (opcional)">{{#link}}{{description}}{{/link}}</textarea>
                         {{#descriptionError}}
                         <div class="invalid-feedback d-block">{{descriptionError}}</div>
                         {{/descriptionError}}
@@ -65,7 +67,7 @@
                     <div class="mb-3 form-check">
                         <!-- hidden fallback para garantir false quando não marcado -->
                         <input type="hidden" name="favorited" value="false">
-                        <input class="form-check-input" type="checkbox" id="favorited" name="favorited" value="true">
+                        <input class="form-check-input" type="checkbox" id="favorited" name="favorited" value="true" {{#link.favorited}}checked{{/link.favorited}}>
                         <label class="form-check-label" for="favorited">Marcar como favorito</label>
                     </div>
 
@@ -78,11 +80,11 @@
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" name="categorias" value="{{id}}"
                                             id="cat-{{id}}">
-                                        <label class="form-check-label" for="cat-{{id}}">
-                                            {{name}}
-                                        </label>
-                                    </div>
-                                </div>
+                                         <label class="form-check-label" for="cat-{{id}}">
+                                             {{name}}
+                                         </label>
+                                     </div>
+                                 </div>
                                 {{/listagem-categorias}}
                             </div>
                             {{^listagem-categorias}}
@@ -94,9 +96,24 @@
                     </div>
 
                     <div class="d-grid">
-                        <button class="btn btn-primary btn-lg" type="submit">Salvar Link</button>
+                        <button class="btn btn-primary btn-lg" type="submit">{{#link}}Editar Link{{/link}}{{^link}}Adicionar Link{{/link}}</button>
                     </div>
                 </form>
+                {{#link}}
+                <script>
+                    (function() {
+                        const selected = [{{#categorias}}{{id}},{{/categorias}}];
+                        selected.forEach(id => {
+                            const cb = document.getElementById('cat-' + id);
+                            if (cb) cb.checked = true;
+                        });
+                        const favCb = document.getElementById('favorited');
+                        if (favCb && {{favorited}}) {
+                            favCb.checked = true;
+                        }
+                    })();
+                </script>
+                {{/link}}
             </div>
         </div>
 
