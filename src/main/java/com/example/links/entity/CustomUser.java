@@ -39,6 +39,7 @@ public class CustomUser implements UserDetails {
     private Long id;
 
     @Size(min = 3, max=50, message = "Name should be between 3 and 50 characters.")
+    
     private String name;
 
     @Email(message = "Use a valid email")
