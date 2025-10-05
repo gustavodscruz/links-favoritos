@@ -30,7 +30,7 @@ public class DashboardController {
     private final CategoriaService categoriaService;
     private final GifService gifService;
 
-    @GetMapping({"/dashboard", "", "/"})
+    @GetMapping({"/dashboard"})
     public ModelAndView getDashboard(HttpServletRequest request) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         ModelAndView modelAndView = new ModelAndView("dashboard");
