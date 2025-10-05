@@ -5,6 +5,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -19,7 +20,7 @@ public class GifService {
 
     private static final String GIPHY_URL = "https://api.giphy.com/v1/gifs/random";
 
-    @Cacheable("randomGif")
+    @Cacheable(value = "randomGif")
     public String getRandomGif() {
         try {
             String url = UriComponentsBuilder.fromUriString(GIPHY_URL)
@@ -43,5 +44,10 @@ public class GifService {
         } catch (Exception e) {
             throw new IllegalStateException("Erro ao buscar GIF aleatório", e);
         }
+    }
+
+    @CacheEvict(value = { "randomGif" })
+    public void wipeCache() {
+        System.out.println("Limpando cache da imagem...");
     }
 }
