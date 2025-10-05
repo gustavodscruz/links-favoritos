@@ -4,9 +4,16 @@ Adicione seus links favoritos e que são os seus mais usados! Guarde-os por cate
 
 ## Rodando o arquivo `deploy.sh`
 
-1. Após executar o script na Azure, adicione as variáveis do env no seu Github. Vá em Settings > Secrets and Variables > Actions.
+1. Pegue uma key do giphy e execute isso no cloudshell:
 
-2. Adicione o seguinte código dentro do main-workflow.yaml!
+```bash
+export GIF_API_KEY="sua-chave-aqui"
+```
+
+2. Após executar o script na Azure, adicione as variáveis do env no seu Github. Vá em Settings > Secrets and Variables > Actions.
+
+3. Adicione o seguinte código dentro do main-workflow.yaml!
+
 
 ```yaml
 - name: Build with Maven

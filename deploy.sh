@@ -19,6 +19,7 @@ SERVER_NAME="sql-server-linksfavoritos"
 GITHUB_REPO_NAME="gustavodscruz/links-favoritos"
 BRANCH="main"
 APP_INSIGHTS_NAME="ai-links-favoritos"
+GIF_API_KEY="${GIF_API_KEY:-valor-padrao}"
 
 # ============================
 # PROVIDERS E EXTENSÕES
@@ -119,7 +120,8 @@ az webapp config appsettings set \
     XDT_MicrosoftApplicationInsights_PreemptSdk="1" \
     SPRING_DATASOURCE_USERNAME=$DB_USERNAME \
     SPRING_DATASOURCE_PASSWORD=$DB_PASSWORD \
-    SPRING_DATASOURCE_URL=$SPRING_DATASOURCE_URL
+    SPRING_DATASOURCE_URL=$SPRING_DATASOURCE_URL \
+    GIF_API_KEY=$GIF_API_KEY
 
 # Reiniciar o Web App
 az webapp restart --name $WEBAPP_NAME --resource-group $RESOURCE_GROUP_NAME
