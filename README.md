@@ -31,6 +31,9 @@ Coloque os seguintes token/variaveis:
 - SPRING_DATASOURCE_PASSWORD
 - GIF_API_KEY
 
+**IMPORTANTE**
+### O token GIF_API_KEY está no entregável pdf, eu não quis expô-lo no código! 
+
 Os tokens `SPRING_DATASOURCE_USERNAME` e `SPRING_DATASOURCE_PASSWORD` estão no seu próprio script, já para `SPRING_DATASOURCE_URL` será necessário pegar dentro do portal da Azure, dentro do recurso de banco de dados sqlserver em `Cadeia de conexões` > `JDBC`. 
 
 O `GIF_API_KEY` lembrando, é o token da api do [Giphy](https://developers.giphy.com/).
