@@ -58,5 +58,8 @@ Se tudo for executado corretamente, meus parabéns, o projeto está no ar na Azu
 
 ## Observações
 
+**IMPORTANTE**
+### O token GIF_API_KEY está no entregável pdf, eu não quis expô-lo no código! 
+
 O script ddl das tabelas está na raiz do projeto com nome de `script_ddl.sql`. Ele é apenas as migrações postas em ordem em um arquivo.
 
