@@ -16,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.example.links.entity.Categoria;
 import com.example.links.entity.CustomUser;
 import com.example.links.service.CategoriaService;
+import com.example.links.service.GifService;
 import com.example.links.service.UserService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,6 +28,7 @@ public class DashboardController {
 
     private final UserService userService;
     private final CategoriaService categoriaService;
+    private final GifService gifService;
 
     @GetMapping({"/dashboard", "", "/"})
     public ModelAndView getDashboard(HttpServletRequest request) {
@@ -43,6 +45,11 @@ public class DashboardController {
         List<Categoria> categorias = categoriaService.findAllByUserId();
         log.debug("Categorias", categorias);
         modelAndView.addObject("categorias", categorias);
+
+        String gifUrl = gifService.getRandomGif();
+
+        modelAndView.addObject("gifUrl", gifUrl);
+
         return modelAndView;
     }
 

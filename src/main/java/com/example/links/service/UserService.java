@@ -30,7 +30,7 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("Email do usuário não encontrado"));
     }
 
-    @Cacheable(value = "user-id", key = "email")
+    @Cacheable(value = "user-id", key = "T(org.springframework.security.core.context.SecurityContextHolder).getContext().getAuthentication().getName()")
     @Transactional(readOnly = true)
     public Long getUserId() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();

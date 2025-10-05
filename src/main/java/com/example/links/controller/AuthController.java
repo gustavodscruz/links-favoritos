@@ -2,7 +2,6 @@ package com.example.links.controller;
 
 import java.util.List;
 
-import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -14,6 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.example.links.dto.RegisterEmailAndPassword;
 import com.example.links.entity.CustomUser;
+import com.example.links.helpers.CsrfHelper;
 import com.example.links.service.UserService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -42,11 +42,7 @@ public class AuthController {
             modelAndView.addObject("logout", logout);
         }
 
-        CsrfToken csrf = (CsrfToken) request.getAttribute("_csrf");
-
-        if (csrf != null) {
-            modelAndView.addObject("_csrf", csrf);
-        }
+        CsrfHelper.addCsrfToken(modelAndView, request);
 
         return modelAndView;
     }
@@ -55,11 +51,7 @@ public class AuthController {
     public ModelAndView getRegisterPage(HttpServletRequest request) {
         ModelAndView modelAndView = new ModelAndView("register");
 
-        CsrfToken csrf = (CsrfToken) request.getAttribute("_csrf");
-
-        if (csrf != null) {
-            modelAndView.addObject("_csrf", csrf);
-        }
+        CsrfHelper.addCsrfToken(modelAndView, request);
 
         return modelAndView;
     }
@@ -70,11 +62,7 @@ public class AuthController {
 
         ModelAndView modelAndView = new ModelAndView("register");
 
-        CsrfToken csrf = (CsrfToken) request.getAttribute("_csrf");
-
-        if (csrf != null) {
-            modelAndView.addObject("_csrf", csrf);
-        }
+        CsrfHelper.addCsrfToken(modelAndView, request);
 
         if (result.hasErrors()) {
             List<FieldError> objectErrors = result.getFieldErrors();

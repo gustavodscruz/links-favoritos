@@ -4,6 +4,7 @@ import com.example.links.dto.CategoriaDto;
 import com.example.links.dto.CategoriaUpdateDto;
 import com.example.links.entity.Categoria;
 import com.example.links.entity.CustomUser;
+import com.example.links.helpers.CsrfHelper;
 import com.example.links.service.CategoriaService;
 import com.example.links.service.UserService;
 
@@ -16,7 +17,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 @RequestMapping("/categoria")
@@ -56,10 +55,7 @@ public class CategoriaController {
             modelAndView.addObject("deleteError", true);
         }
 
-        CsrfToken csrf = (CsrfToken) request.getAttribute("_csrf");
-        if (csrf != null) {
-            modelAndView.addObject("_csrf", csrf);
-        }
+        CsrfHelper.addCsrfToken(modelAndView, request);
 
         if (id != null){
             modelAndView.addObject("categoria", categoriaService.findById(id));
@@ -108,10 +104,7 @@ public class CategoriaController {
     public ModelAndView editCategoria(@Valid @ModelAttribute CategoriaUpdateDto dto, BindingResult result, HttpServletRequest request) {
         ModelAndView modelAndView = new ModelAndView("/categoria/add");
         
-        CsrfToken csrf = (CsrfToken) request.getAttribute("_csrf");
-        if (csrf != null) {
-            modelAndView.addObject("_csrf", csrf);
-        }
+        CsrfHelper.addCsrfToken(modelAndView, request);
 
         List<Categoria> categorias = categoriaService.findAllByUserId();
         modelAndView.addObject("categorias", categorias);

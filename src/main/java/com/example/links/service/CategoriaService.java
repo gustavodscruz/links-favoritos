@@ -22,7 +22,7 @@ public class CategoriaService {
     private final CategoriaRepository categoriaRepository;
     private final UserService userService;
 
-    @Cacheable(value = "categorias", key = "#root.target.userService.getUserId()")
+    @Cacheable(value = "categorias", key = "T(org.springframework.security.core.context.SecurityContextHolder).getContext().getAuthentication().getName()")
     public List<Categoria> findAllByUserId() {
         Long userId = userService.getUserId();
         return categoriaRepository.findAllByUserId(userId);

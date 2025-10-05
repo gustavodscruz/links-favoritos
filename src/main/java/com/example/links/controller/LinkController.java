@@ -1,7 +1,6 @@
 package com.example.links.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,6 +10,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.example.links.dto.LinkDto;
 import com.example.links.dto.LinkUpdateDto;
 import com.example.links.entity.Link;
+import com.example.links.helpers.CsrfHelper;
 import com.example.links.service.CategoriaService;
 import com.example.links.service.LinkService;
 
@@ -21,8 +21,6 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-
 
 @Controller
 @RequestMapping("/link")
@@ -40,10 +38,7 @@ public class LinkController {
         log.debug("GET /link/add called");
         ModelAndView modelAndView = new ModelAndView("/link/add");
 
-        CsrfToken csrf = (CsrfToken) request.getAttribute("_csrf");
-        if (csrf != null) {
-            modelAndView.addObject("_csrf", csrf);
-        }
+        CsrfHelper.addCsrfToken(modelAndView, request);
 
         var categorias = categoriaService.findAllByUserId();
 
@@ -58,10 +53,7 @@ public class LinkController {
 
         Link link = linkService.findById(id);
 
-        CsrfToken csrf = (CsrfToken) request.getAttribute("_csrf");
-        if (csrf != null) {
-            modelAndView.addObject("_csrf", csrf);
-        }
+        CsrfHelper.addCsrfToken(modelAndView, request);
 
         var categorias = categoriaService.findAllByUserId();
         modelAndView.addObject("listagem-categorias", categorias);
@@ -74,8 +66,7 @@ public class LinkController {
     @PostMapping("/edit")
     public ModelAndView editLink(@Valid @ModelAttribute LinkUpdateDto dto, BindingResult result) {
         ModelAndView modelAndView;
-        
-        
+
         if (result.hasErrors()) {
             modelAndView = new ModelAndView("redirect:/link/edit");
             modelAndView.addObject("link", dto.getId());
@@ -100,26 +91,31 @@ public class LinkController {
 
         return modelAndView;
     }
-    
-    
 
     @PostMapping("/add")
-    public ModelAndView saveLink(@Valid @ModelAttribute LinkDto dto, BindingResult result) {
-        ModelAndView modelAndView = new ModelAndView("redirect:/link/add");
+    public ModelAndView saveLink(@Valid @ModelAttribute LinkDto dto, BindingResult result, HttpServletRequest request) {
+        ModelAndView modelAndView;
 
         if (result.hasErrors()) {
+            modelAndView = new ModelAndView("/link/add");
             result.getFieldErrors().forEach(error -> {
                 modelAndView.addObject(error.getField().concat("Error"), error.getDefaultMessage());
             });
+            CsrfHelper.addCsrfToken(modelAndView, request);
             return modelAndView;
         }
 
         Link link = linkService.save(dto);
 
         if (link == null) {
+            modelAndView = new ModelAndView("/link/add");
             modelAndView.addObject("error", "O link não pode ser salvo!");
+            CsrfHelper.addCsrfToken(modelAndView, request);
             return modelAndView;
         }
+
+        modelAndView = new ModelAndView("/link/index");
+        CsrfHelper.addCsrfToken(modelAndView, request);
 
         modelAndView.addObject("success", "Link adicionado com sucesso!");
 
@@ -145,17 +141,14 @@ public class LinkController {
     public ModelAndView listLinks(HttpServletRequest request,
             @RequestParam(required = false) String success,
             @RequestParam(required = false) String error,
-            @RequestParam(value = "categoria", required = false) Long categoriaId
-            ) {
+            @RequestParam(value = "categoria", required = false) Long categoriaId) {
 
         ModelAndView modelAndView = new ModelAndView("/link/index");
-        CsrfToken csrf = (CsrfToken) request.getAttribute("_csrf");
+        
+        CsrfHelper.addCsrfToken(modelAndView, request);
 
         modelAndView.addObject("listagem-categorias", categoriaService.findAllByUserId());
 
-        if (csrf != null) {
-            modelAndView.addObject("_csrf", csrf);
-        }
         if (success != null) {
             modelAndView.addObject("success", success);
         }
@@ -171,6 +164,5 @@ public class LinkController {
         modelAndView.addObject("links", linkService.findAllByUser());
         return modelAndView;
     }
-    
 
 }
