@@ -29,6 +29,9 @@ public class CategoriaService {
     }
 
     @Transactional
+    @CacheEvict(value = {
+        "categorias", "categorias-list", "categoria"
+    }, allEntries = true)
     public Categoria save(CategoriaDto dto){
         Categoria categoria = new Categoria();
         categoria.setName(dto.getName());
@@ -52,13 +55,20 @@ public class CategoriaService {
     }
 
     @Transactional
+    @CacheEvict(value = {
+        "categorias", "categorias-list", "categoria"
+    }, allEntries = true)
     public boolean delete (Long id) {
-        categoriaRepository.deleteById(id);
+        Categoria categoria = findById(id);
+        categoriaRepository.delete(categoria);
         wipeCache();
         return !categoriaRepository.existsById(id);
     }
 
     @Transactional
+    @CacheEvict(value = {
+        "categorias", "categorias-list", "categoria"
+    }, allEntries = true)
     public Categoria update (CategoriaUpdateDto dto) {
         Categoria categoria = findById(dto.getId());
         categoria.setName(dto.getName());
@@ -66,8 +76,8 @@ public class CategoriaService {
     }
 
     @CacheEvict(value = {
-        "categorias", "categorias-list"
-    })
+        "categorias", "categorias-list", "categoria"
+    }, allEntries = true)
     public void wipeCache (){
         System.out.println("Limpando cache...");
     }

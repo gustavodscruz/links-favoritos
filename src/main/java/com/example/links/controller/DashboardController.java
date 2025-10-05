@@ -48,6 +48,10 @@ public class DashboardController {
 
         String gifUrl = gifService.getRandomGif();
 
+        if (gifUrl.isEmpty()) {
+            gifUrl = "https://i.pinimg.com/736x/71/73/b7/7173b742b3898525bd42220257ad0443.jpg";
+        }
+
         modelAndView.addObject("gifUrl", gifUrl);
 
         return modelAndView;

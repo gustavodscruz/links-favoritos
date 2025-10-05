@@ -43,6 +43,9 @@ public class LinkService {
     }
 
     @Transactional
+    @CacheEvict(value = {
+            "links", "link"
+    }, allEntries = true)
     public Link save(LinkDto dto) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         CustomUser user = ((CustomUser) principal);
@@ -63,6 +66,9 @@ public class LinkService {
     }
 
     @Transactional
+    @CacheEvict(value = {
+            "links", "link"
+    }, allEntries = true)
     public Link update(LinkUpdateDto dto) {
         Link link = findById(dto.getId());
         link.setName(dto.getName());
@@ -76,8 +82,12 @@ public class LinkService {
     }
 
     @Transactional
+    @CacheEvict(value = {
+            "links", "link"
+    }, allEntries = true)
     public boolean delete(Long id) {
-        linkRepository.deleteById(id);
+        Link link = findById(id);
+        linkRepository.delete(link);
         wipeCache();
         return !linkRepository.existsById(id);
 
@@ -85,7 +95,7 @@ public class LinkService {
 
     @CacheEvict(value = {
             "links", "link"
-    })
+    }, allEntries = true)
     public void wipeCache() {
         System.out.println("Limpando cache...");
     }
