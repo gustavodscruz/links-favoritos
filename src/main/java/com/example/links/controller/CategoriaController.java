@@ -102,7 +102,7 @@ public class CategoriaController {
 
     @PostMapping("/edit")
     public ModelAndView editCategoria(@Valid @ModelAttribute CategoriaUpdateDto dto, BindingResult result, HttpServletRequest request) {
-        ModelAndView modelAndView = new ModelAndView("/categoria/add");
+        ModelAndView modelAndView = new ModelAndView("categoria/add");
         
         CsrfHelper.addCsrfToken(modelAndView, request);
 

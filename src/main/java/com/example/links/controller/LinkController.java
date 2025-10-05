@@ -36,7 +36,7 @@ public class LinkController {
     @GetMapping("/add")
     public ModelAndView getLinkAddPage(HttpServletRequest request) {
         log.debug("GET /link/add called");
-        ModelAndView modelAndView = new ModelAndView("/link/add");
+        ModelAndView modelAndView = new ModelAndView("link/add");
 
         CsrfHelper.addCsrfToken(modelAndView, request);
 
@@ -49,7 +49,7 @@ public class LinkController {
 
     @GetMapping("/edit")
     public ModelAndView getLinkPage(@RequestParam(value = "link") Long id, HttpServletRequest request) {
-        ModelAndView modelAndView = new ModelAndView("/link/add");
+        ModelAndView modelAndView = new ModelAndView("link/add");
 
         Link link = linkService.findById(id);
 
@@ -97,7 +97,7 @@ public class LinkController {
         ModelAndView modelAndView;
 
         if (result.hasErrors()) {
-            modelAndView = new ModelAndView("/link/add");
+            modelAndView = new ModelAndView("link/add");
             result.getFieldErrors().forEach(error -> {
                 modelAndView.addObject(error.getField().concat("Error"), error.getDefaultMessage());
             });
@@ -108,18 +108,19 @@ public class LinkController {
         Link link = linkService.save(dto);
 
         if (link == null) {
-            modelAndView = new ModelAndView("/link/add");
+            modelAndView = new ModelAndView("link/add");
             modelAndView.addObject("error", "O link não pode ser salvo!");
             CsrfHelper.addCsrfToken(modelAndView, request);
             return modelAndView;
         }
 
-        modelAndView = new ModelAndView("/link/index");
-        CsrfHelper.addCsrfToken(modelAndView, request);
+        
+        
+        ModelAndView success = new ModelAndView("redirect:/link/")
+        .addObject("success", "Link adicionado com sucesso!");
+        CsrfHelper.addCsrfToken(success, request);
 
-        modelAndView.addObject("success", "Link adicionado com sucesso!");
-
-        return modelAndView;
+        return success;
     }
 
     @PostMapping("/delete")
@@ -143,7 +144,7 @@ public class LinkController {
             @RequestParam(required = false) String error,
             @RequestParam(value = "categoria", required = false) Long categoriaId) {
 
-        ModelAndView modelAndView = new ModelAndView("/link/index");
+        ModelAndView modelAndView = new ModelAndView("link/index");
         
         CsrfHelper.addCsrfToken(modelAndView, request);
 
