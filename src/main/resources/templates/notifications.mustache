@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notificações</title>
+    <link rel="stylesheet" href="/css/notifications.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+</head>
+<body>
+    <div id="notifications">
+        {{> partials/header}}
+
+        <h2>📨 Notificações de Preview</h2>
+
+        {{#notificacoes}}
+        <div class="notification {{status}}">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <strong>{{message}}</strong>
+                    {{#url}}<div class="mt-2"><small>🔗 <a href="{{url}}" target="_blank">{{url}}</a></small></div>{{/url}}
+                </div>
+                <div class="text-end"><span class="timestamp">{{timestamp}}</span></div>
+            </div>
+        </div>
+        {{/notificacoes}}
+
+        {{^notificacoes}}
+        <p class="text-center">Nenhuma notificação no momento...</p>
+        {{/notificacoes}}
+
+    </div>
+</body>
+</html>

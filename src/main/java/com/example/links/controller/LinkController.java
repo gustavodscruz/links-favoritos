@@ -1,6 +1,10 @@
 package com.example.links.controller;
 
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -8,9 +12,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.links.dto.LinkDto;
+import com.example.links.dto.LinkPreviewRequest;
 import com.example.links.dto.LinkUpdateDto;
+import com.example.links.entity.CustomUser;
 import com.example.links.entity.Link;
 import com.example.links.helpers.CsrfHelper;
+import com.example.links.messages.KafkaConsumer;
+import com.example.links.messages.KafkaProducer;
 import com.example.links.service.CategoriaService;
 import com.example.links.service.LinkService;
 
@@ -32,6 +40,9 @@ public class LinkController {
 
     @Autowired
     private LinkService linkService;
+
+    @Autowired
+    private KafkaProducer kafkaProducer;
 
     @GetMapping("/add")
     public ModelAndView getLinkAddPage(HttpServletRequest request) {
@@ -114,10 +125,16 @@ public class LinkController {
             return modelAndView;
         }
 
-        
-        
+        LinkPreviewRequest linkPreviewRequest = new LinkPreviewRequest().builder()
+                .url(link.getUrl())
+                .requestedAt(LocalDateTime.now())
+                .userId(((CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId())
+                .build();
+
+        kafkaProducer.sendLinkForPreview(linkPreviewRequest);
+
         ModelAndView success = new ModelAndView("redirect:/link/")
-        .addObject("success", "Link adicionado com sucesso!");
+                .addObject("success", "Link adicionado com sucesso!");
         CsrfHelper.addCsrfToken(success, request);
 
         return success;
@@ -145,7 +162,7 @@ public class LinkController {
             @RequestParam(value = "categoria", required = false) Long categoriaId) {
 
         ModelAndView modelAndView = new ModelAndView("link/index");
-        
+
         CsrfHelper.addCsrfToken(modelAndView, request);
 
         modelAndView.addObject("listagem-categorias", categoriaService.findAllByUserId());

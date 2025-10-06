@@ -3,6 +3,7 @@
         <a class="navbar-brand" href="/dashboard">🔗 Links Favoritos</a>
         <div class="d-flex align-items-center">
             {{#nome}}<span class="me-3 small-note">Olá, <strong>{{nome}}</strong></span>{{/nome}}
+            <a href="/notifications" class="btn btn-sm btn-outline-secondary me-2" title="Notificações">🔔</a>
             <form action="/logout" method="post" class="m-0">
                 {{>partials/csrf}}
                 <button class="btn btn-sm btn-outline-primary" type="submit">Sair</button>
