@@ -72,6 +72,7 @@ public class CategoriaService {
     public Categoria update (CategoriaUpdateDto dto) {
         Categoria categoria = findById(dto.getId());
         categoria.setName(dto.getName());
+        wipeCache();
         return categoriaRepository.save(categoria);
     }
 
